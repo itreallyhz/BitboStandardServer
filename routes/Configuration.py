@@ -15,7 +15,7 @@ router = APIRouter(prefix="/configurations", tags=["Configuration"])
 
 #Get all configurations
 @router.get("/")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     # to query the entire created table from Configurations db
     configurations = db.query(Configuration).filter(Configuration.deleted_at == None).all()
     data = []
@@ -42,7 +42,7 @@ async def index(db: Session = Depends(get_db), current_user: UserSchema = Depend
 
 #Get deleted configurations
 @router.get("/deleted")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     # to query the entire created table from Configurations db
     configurations = db.query(Configuration).filter(Configuration.deleted_at != None).all()
     data = []
@@ -69,7 +69,7 @@ async def index(db: Session = Depends(get_db), current_user: UserSchema = Depend
 
 #Get a specific configuration
 @router.get("/{id}")
-async def show(id: UUID4, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def show(id: UUID4, db: Session = Depends(get_db)):
     configuration = db.query(Configuration).filter(Configuration.id == id, Configuration.deleted_at == None).first()
 
     if configuration:

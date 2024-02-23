@@ -16,7 +16,7 @@ router = APIRouter(prefix="/residentprofiles", tags=["Resident Profile"])
 
 # Get All residents
 @router.get("/get")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     # Query all residents that are not marked as deleted
     residents = db.query(ResidentProfile).filter(ResidentProfile.deleted_at == None).all()
     data = []
@@ -130,8 +130,7 @@ async def index(
     is_indigenous: Optional[str] = None,
     is_pwd: Optional[str] = None,
     is_registered_voter: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: UserSchema = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     # Calculate the offset based on the page and limit
     offset = (page - 1) * limit
@@ -278,7 +277,7 @@ async def index(
 
 # Get all Deleted Residents
 @router.get("/deleted")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     # Query all residents that are not marked as deleted
     residents = db.query(ResidentProfile).filter(ResidentProfile.deleted_at != None).all()
     data = []
@@ -494,7 +493,7 @@ async def store(request: ResidentProfileSchema, db: Session = Depends(get_db), c
 
 #Get Specific Resident
 @router.get("/{id}")
-async def show(id: UUID4, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def show(id: UUID4, db: Session = Depends(get_db)):
     resident = db.query(ResidentProfile).filter(ResidentProfile.id == id, ResidentProfile.deleted_at == None).first()
 
     if resident:

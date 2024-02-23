@@ -21,7 +21,7 @@ router = APIRouter(prefix="/incidents", tags=["Incident"])
 
 # Get All Incidents
 @router.get("/all")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     incidents = db.query(Incident).filter(Incident.deleted_at == None).all()
 
     data = []
@@ -61,8 +61,7 @@ async def index(
     page: Optional[int] = 1,
     limit: Optional[int] = 10,
     search: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: UserSchema = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
 
     # Calculate the offset based on the page and limit
@@ -119,7 +118,7 @@ async def index(
 
 # Get All Deleted Barangay Officials
 @router.get("/deleted")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     incidents = db.query(Incident).filter(Incident.deleted_at != None).all()
 
     data = []
@@ -157,7 +156,7 @@ async def index(db: Session = Depends(get_db), current_user: UserSchema = Depend
 
 # Get Specific Barangay Official
 @router.get("/{id}")
-async def show(id: UUID4, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def show(id: UUID4, db: Session = Depends(get_db)):
     incident = db.query(Incident).filter(Incident.id == id,
                                                           Incident.deleted_at == None).first()
 

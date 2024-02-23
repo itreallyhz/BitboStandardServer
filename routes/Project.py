@@ -18,7 +18,7 @@ router = APIRouter(prefix="/projects", tags=["Project"])
 # Get All Ordinances
 
 @router.get("/get")
-async def index(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def index(db: Session = Depends(get_db)):
     # Query all residents that are not marked as deleted
     projects = db.query(Project).filter(Project.deleted_at == None).all()
     data = []
@@ -51,8 +51,7 @@ async def index(
     page: Optional[int] = 1,
     limit: Optional[int] = 10,
     search: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: UserSchema = Depends(get_current_user)):
+    db: Session = Depends(get_db)):
 
     # Calculate the offset based on the page and limit
     offset = (page - 1) * limit
@@ -186,7 +185,7 @@ async def store(request: ProjectSchema, db: Session = Depends(get_db), current_u
 
 
 @router.get("/{id}")
-async def show(id: UUID4, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def show(id: UUID4, db: Session = Depends(get_db)):
     project = db.query(Project).filter(Project.id == id, Project.deleted_at == None).first()
 
     if project:

@@ -26,7 +26,7 @@ router = APIRouter(prefix="/ordinances", tags=["Ordinance"])
 
 # Get All Ordinances
 @router.get("/all")
-async def get_all_ordinances(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def get_all_ordinances(db: Session = Depends(get_db)):
     ordinances = db.query(Ordinance).filter(Ordinance.deleted_at == None).all()
     data = []
 
@@ -83,8 +83,7 @@ async def get_paged_ordinances(
     page: Optional[int] = 1,
     limit: Optional[int] = 10,
     search: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: UserSchema = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     # Calculate the offset based on the page and limit
     offset = (page - 1) * limit
@@ -139,7 +138,7 @@ async def get_paged_ordinances(
 #Get All Deleted Ordinances
 
 @router.get("/all")
-async def get_all_ordinances(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def get_all_ordinances(db: Session = Depends(get_db)):
     ordinances = db.query(Ordinance).filter(Ordinance.deleted_at != None).all()
     data = []
 
@@ -170,7 +169,7 @@ async def get_all_ordinances(db: Session = Depends(get_db), current_user: UserSc
         return JSONResponse(content=response_data, status_code=404)
 
 @router.get("/view_file/{id}")
-async def view_file(id: UUID, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def view_file(id: UUID, db: Session = Depends(get_db)):
     ordinance = db.query(Ordinance).filter(Ordinance.id == id, Ordinance.deleted_at == None).first()
 
     if ordinance:

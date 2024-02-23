@@ -22,7 +22,7 @@ router = APIRouter(prefix="/clearancespermits", tags=["Clearances and Permits"])
 
 # Get All Clearance Permits
 @router.get("/all")
-async def get_all_clearance_permits(db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def get_all_clearance_permits(db: Session = Depends(get_db)):
     clearance_permits = db.query(ClearancePermit).filter(ClearancePermit.deleted_at == None).all()
 
     data = []
@@ -63,9 +63,7 @@ async def index(
             page: Optional[int] = 1,
             limit: Optional[int] = 10,
             search: Optional[str] = None,
-            db: Session = Depends(get_db),
-            current_user: UserSchema = Depends(get_current_user)
-    ):
+            db: Session = Depends(get_db)):
 
         # Calculate the offset based on the page and limit
         offset = (page - 1) * limit
@@ -123,7 +121,7 @@ async def index(
 
 # Get Specific Clearance and Permit
 @router.get("/{id}")
-async def show(id: UUID4, db: Session = Depends(get_db), current_user: UserSchema = Depends(get_current_user)):
+async def show(id: UUID4, db: Session = Depends(get_db)):
     clearance_permit = db.query(ClearancePermit).filter(ClearancePermit.id == id, ClearancePermit.deleted_at == None).first()
 
     if clearance_permit:
